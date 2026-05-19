@@ -32,5 +32,4 @@ like a real engineering project.
 
 Design phase. See:
 
-- [Enterprise AI Eval Lab design spec](docs/superpowers/specs/2026-05-19-enterprise-ai-eval-lab-design.md)
-
+- [Enterprise AI Eval Lab design spec](docs/design/enterprise-ai-eval-lab.md)
