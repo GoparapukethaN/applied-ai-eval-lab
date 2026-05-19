@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:pages": "NEXT_PUBLIC_DEMO_MODE=true NEXT_PUBLIC_BASE_PATH=/applied-ai-eval-lab EXPORT_MODE=true next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },

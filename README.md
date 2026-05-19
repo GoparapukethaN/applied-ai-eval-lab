@@ -59,6 +59,18 @@ docker compose up --build
 Frontend runs on `http://localhost:3000`; backend runs on
 `http://localhost:8000`.
 
+## Public Static Demo
+
+The frontend can also be exported as a static demo with safe sample data. This
+mode does not need a backend or API keys.
+
+```bash
+cd frontend
+npm run build:pages
+```
+
+The static files are written to `frontend/out`.
+
 ## Verification
 
 Backend tests:
