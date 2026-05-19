@@ -224,9 +224,9 @@ Required tests:
 - Query endpoint returns answer, citations, retrieved chunks, and run metadata.
 - Empty index and invalid document cases return structured errors.
 
-CI should run formatting, linting, unit tests, and backend smoke tests. GitHub
-Actions workflow files require a GitHub token with `workflow` scope before they
-can be pushed.
+The local verification path should run formatting, linting, unit tests, and backend
+smoke tests. Hosted CI can be added later if it is useful, but the project should stay
+verifiable from a clean local setup.
 
 ## Repository and GitHub Strategy
 

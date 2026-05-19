@@ -44,8 +44,8 @@ chunks, answer citations, latency, cost estimate, and failure categories.
   APIs.
 - Static demo mode uses fixed safe data, while full upload parsing requires the
   backend.
-- GitHub Actions are intentionally not added until the active GitHub token has
-  workflow scope.
+- Verification currently runs locally so the project is not tied to hosted CI
+  availability.
 
 ## Next Milestones
 
@@ -53,4 +53,3 @@ chunks, answer citations, latency, cost estimate, and failure categories.
 2. Add persistent experiment reports without using Supabase.
 3. Add deployment for the backend when hosting credentials are available.
 4. Add screenshots and a short demo recording.
-
