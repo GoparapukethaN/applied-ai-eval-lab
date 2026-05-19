@@ -1,0 +1,28 @@
+PYTHON ?= python3
+NPM ?= npm
+
+.PHONY: install-backend install-frontend test-backend typecheck build build-pages compose-check verify
+
+install-backend:
+	$(PYTHON) -m pip install -e "backend[dev]"
+
+install-frontend:
+	cd frontend && $(NPM) ci
+
+test-backend:
+	$(PYTHON) -m pytest backend/tests
+
+typecheck:
+	cd frontend && $(NPM) run typecheck
+
+build:
+	cd frontend && $(NPM) run build
+
+build-pages:
+	cd frontend && $(NPM) run build:pages
+
+compose-check:
+	docker compose config --quiet
+
+verify:
+	./scripts/verify-local.sh

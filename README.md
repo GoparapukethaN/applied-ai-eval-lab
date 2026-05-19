@@ -78,28 +78,20 @@ The static files are written to `frontend/out`.
 
 ## Verification
 
-Backend:
+Run the full local verification path from the repo root:
 
 ```bash
-source .venv/bin/activate
-python -m pytest backend/tests
+make verify
 ```
 
-Frontend:
+Or run the parts separately:
 
 ```bash
-cd frontend
-npm ci
-npm audit --omit=dev
-npm run typecheck
-npm run build
-npm run build:pages
-```
-
-Docker Compose:
-
-```bash
-docker compose config --quiet
+make test-backend
+make typecheck
+make build
+make build-pages
+make compose-check
 ```
 
 Current verification status: backend tests pass (`15 passed`), frontend audit has
