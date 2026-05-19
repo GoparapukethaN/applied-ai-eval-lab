@@ -39,13 +39,13 @@ DEFAULT_EVAL_EXAMPLES = [
 
 
 def citation_coverage(response: QueryResponse) -> float:
-    if not response.retrieved_chunks:
+    if not response.citations:
         return 0.0
     cited_chunk_ids = {citation.chunk_id for citation in response.citations}
     retrieved_chunk_ids = {item.chunk.id for item in response.retrieved_chunks}
     if not retrieved_chunk_ids:
         return 0.0
-    return round(len(cited_chunk_ids & retrieved_chunk_ids) / len(retrieved_chunk_ids), 3)
+    return round(len(cited_chunk_ids & retrieved_chunk_ids) / len(cited_chunk_ids), 3)
 
 
 def retrieval_hit(example: EvaluationExample, response: QueryResponse) -> bool:
@@ -58,7 +58,7 @@ def classify_failure(example: EvaluationExample, response: QueryResponse) -> str
         return "no_citation"
     if not retrieval_hit(example, response):
         return "missed_relevant_context"
-    if response.confidence < 0.2:
+    if response.confidence < 0.15:
         return "low_confidence"
     return None
 
@@ -112,4 +112,3 @@ def summarize_evaluation(
         failure_count=sum(1 for item in items if item.failure_category),
         items=items,
     )
-

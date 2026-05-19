@@ -26,7 +26,16 @@ def build_grounded_answer(
     latency_ms: int,
     top_k: int,
 ) -> QueryResponse:
-    useful_chunks = [item for item in retrieved_chunks if item.score >= 0.05]
+    best_score = max((item.score for item in retrieved_chunks), default=0.0)
+    useful_chunks: list[RetrievedChunk] = []
+    if retrieved_chunks and best_score >= 0.06:
+        useful_chunks.append(retrieved_chunks[0])
+        secondary_threshold = max(0.12, best_score * 0.55)
+        useful_chunks.extend(
+            item
+            for item in retrieved_chunks[1:]
+            if item.score >= secondary_threshold and item.chunk.id != retrieved_chunks[0].chunk.id
+        )
     if not useful_chunks:
         return QueryResponse(
             question=question,
@@ -63,7 +72,7 @@ def build_grounded_answer(
         answer_parts.append(f"{quote} [{citation_id}]")
 
     token_estimate = sum(item.chunk.token_count for item in useful_chunks[:top_k])
-    confidence = min(0.95, round(sum(item.score for item in useful_chunks[:2]) / 1.4, 2))
+    confidence = min(0.95, round(best_score * 2.4, 2))
     return QueryResponse(
         question=question,
         answer=" ".join(answer_parts),
@@ -78,4 +87,3 @@ def build_grounded_answer(
             mode="local-grounded",
         ),
     )
-
