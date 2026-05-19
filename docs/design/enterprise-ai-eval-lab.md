@@ -3,13 +3,13 @@
 ## Purpose
 
 Build a live enterprise-style AI/ML portfolio project that demonstrates practical
-depth in document intelligence, retrieval augmented generation, LLM evaluation,
-experiment design, backend/frontend engineering, and production-readiness.
+depth in document intelligence, retrieval augmented generation, AI evaluation,
+experiment design, backend/frontend engineering, and production-minded tradeoffs.
 
 The project should prove more than "I built a chatbot." It should show that the
 system can ingest documents, retrieve evidence, generate grounded answers,
-measure quality, expose failures, compare experiments, and ship as a reliable
-web application.
+measure quality, expose failures, compare experiments, and present a reliable
+reviewer experience.
 
 ## Product Summary
 
@@ -17,7 +17,7 @@ Applied AI Eval Lab is a web application for evaluating document Q&A systems.
 Users can upload or select documents, ask questions, inspect answers with
 citations, view retrieved chunks, and compare model/retrieval configurations.
 The app includes evaluation reports that measure retrieval quality, answer
-quality, hallucination risk, latency, and estimated cost.
+quality, citation coverage, latency, and estimated cost.
 
 ## Target Audience
 
@@ -270,4 +270,3 @@ The first public release is successful when:
 - Enterprise features are staged after the usable v0, so the project can ship
   incrementally.
 - The design avoids deceptive claims and relies on real process evidence.
-

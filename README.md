@@ -1,10 +1,10 @@
 # Applied AI Eval Lab
 
-Enterprise document intelligence and AI evaluation workspace.
+Document intelligence and AI evaluation workspace.
 
-The app demonstrates a full applied AI workflow: document ingestion, chunking,
+The app demonstrates a practical applied AI workflow: document ingestion, chunking,
 retrieval, grounded answers, citations, evaluation metrics, failure visibility,
-and production-minded local deployment.
+and a deployment-aware local setup.
 
 Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
 
@@ -78,22 +78,33 @@ The static files are written to `frontend/out`.
 
 ## Verification
 
-Backend tests:
+Backend:
 
 ```bash
 source .venv/bin/activate
-cd backend
-python -m pytest -q
+python -m pytest backend/tests
 ```
 
-Frontend checks:
+Frontend:
 
 ```bash
 cd frontend
+npm ci
 npm audit --omit=dev
 npm run typecheck
 npm run build
+npm run build:pages
 ```
+
+Docker Compose:
+
+```bash
+docker compose config --quiet
+```
+
+Current verification status: backend tests pass (`15 passed`), frontend audit has
+`0 vulnerabilities`, typecheck/build/static export pass, and Docker Compose config
+parses cleanly.
 
 ## Demo Flow
 
@@ -126,3 +137,7 @@ only. Real keys and private documents should never be committed.
 - [Model card](docs/model-card.md)
 - [Data card](docs/data-card.md)
 - [Case study](docs/case-study.md)
+
+## License
+
+MIT. See [LICENSE](LICENSE).
