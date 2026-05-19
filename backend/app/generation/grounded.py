@@ -7,14 +7,34 @@ from app.models.schemas import Citation, QueryMetadata, QueryResponse, Retrieved
 SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
 
+def _normalize_terms(text: str) -> set[str]:
+    terms: set[str] = set()
+    for raw_term in re.findall(r"[A-Za-z0-9']+", text.lower()):
+        terms.add(raw_term)
+        for suffix in ("ing", "ed", "s"):
+            if len(raw_term) > len(suffix) + 3 and raw_term.endswith(suffix):
+                terms.add(raw_term[: -len(suffix)])
+    return terms
+
+
 def _best_sentence(question: str, text: str) -> str:
-    question_terms = {term.lower() for term in re.findall(r"[A-Za-z0-9']+", question)}
+    question_terms = _normalize_terms(question)
     sentences = [sentence.strip() for sentence in SENTENCE_RE.split(text) if sentence.strip()]
     if not sentences:
         return text[:280].strip()
+
+    def rank(sentence: str) -> int:
+        sentence_terms = _normalize_terms(sentence)
+        score = len(question_terms & sentence_terms)
+        if "document" in question_terms and "document" in sentence_terms:
+            score += 3
+        if "include" in question_terms and "include" in sentence_terms:
+            score += 2
+        return score
+
     ranked = sorted(
         sentences,
-        key=lambda sentence: len(question_terms & set(re.findall(r"[a-z0-9']+", sentence.lower()))),
+        key=rank,
         reverse=True,
     )
     return ranked[0][:360].strip()

@@ -45,3 +45,28 @@ def test_grounded_answer_returns_citations() -> None:
     assert "security lead" in response.answer.lower()
     assert response.confidence > 0
 
+
+def test_grounded_answer_prefers_specific_documentation_sentence() -> None:
+    document = SourceDocument(
+        id="policy",
+        title="AI Policy",
+        text=(
+            "# Policy\n\n"
+            "## Vendor Review\n\n"
+            "New AI vendors must complete security, privacy, and reliability review before handling data. "
+            "The review must document data retention, model training usage, audit logging, and subprocessors."
+        ),
+    )
+    store = InMemoryVectorStore()
+    store.index(chunk_document(document, chunk_size=60, chunk_overlap=0))
+    results = store.search("What must be documented during AI vendor review?", top_k=1)
+
+    response = build_grounded_answer(
+        "What must be documented during AI vendor review?",
+        results,
+        latency_ms=12,
+        top_k=1,
+    )
+
+    assert "data retention" in response.answer.lower()
+    assert "subprocessors" in response.answer.lower()

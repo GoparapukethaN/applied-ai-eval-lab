@@ -6,10 +6,12 @@ import {
   CheckCircle2,
   Database,
   FileSearch,
+  FlaskConical,
   Play,
   RefreshCw,
   ShieldCheck,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Upload
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -17,11 +19,14 @@ import {
   askQuestion,
   getSampleDocuments,
   indexSampleDocument,
-  runEvaluation
+  runExperiments,
+  runEvaluation,
+  uploadDocument
 } from "@/lib/api";
 import type {
   DocumentSummary,
   EvaluationSummary,
+  ExperimentRunResponse,
   IndexResponse,
   QueryResponse
 } from "@/lib/types";
@@ -39,6 +44,7 @@ export default function Home() {
   const [question, setQuestion] = useState(starterQuestions[0]);
   const [answer, setAnswer] = useState<QueryResponse | null>(null);
   const [evaluation, setEvaluation] = useState<EvaluationSummary | null>(null);
+  const [experiments, setExperiments] = useState<ExperimentRunResponse | null>(null);
   const [status, setStatus] = useState("Loading workspace");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +84,26 @@ export default function Home() {
     }
   }
 
+  async function handleUpload(file: File | null) {
+    if (!file) return;
+    setBusy(true);
+    setError(null);
+    setStatus("Parsing uploaded document");
+    try {
+      const result = await uploadDocument(file);
+      setIndex(result);
+      setAnswer(null);
+      setEvaluation(null);
+      setExperiments(null);
+      setStatus(`Uploaded and indexed ${result.chunk_count} chunks`);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Upload failed");
+      setStatus("Upload failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleAsk() {
     setBusy(true);
     setError(null);
@@ -105,6 +131,22 @@ export default function Home() {
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Evaluation failed");
       setStatus("Evaluation failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleExperiments() {
+    setBusy(true);
+    setError(null);
+    setStatus("Comparing retrieval settings");
+    try {
+      const result = await runExperiments();
+      setExperiments(result);
+      setStatus(`Experiment ${result.run_id} complete`);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Experiment run failed");
+      setStatus("Experiment run failed");
     } finally {
       setBusy(false);
     }
@@ -146,6 +188,18 @@ export default function Home() {
             {busy ? <RefreshCw className="spin" size={16} /> : <Play size={16} />}
             Index
           </button>
+          <label className="upload-button">
+            <Upload size={16} />
+            Upload PDF/TXT
+            <input
+              type="file"
+              accept=".pdf,.txt,.md,text/plain,application/pdf"
+              onChange={(event) => {
+                void handleUpload(event.target.files?.[0] ?? null);
+                event.currentTarget.value = "";
+              }}
+            />
+          </label>
           {selectedDocument ? (
             <dl className="mini-stats">
               <div>
@@ -168,6 +222,7 @@ export default function Home() {
           <ul className="check-list">
             <li>Provider-neutral API boundaries</li>
             <li>Local mode requires no API keys</li>
+            <li>PDF and text upload path</li>
             <li>Evaluation runs expose failures</li>
             <li>Citations trace answers to chunks</li>
           </ul>
@@ -329,6 +384,57 @@ export default function Home() {
             <p className="empty-state">Run the curated eval set to see quality signals.</p>
           )}
         </section>
+
+        <section className="surface experiment-panel">
+          <div className="evaluation-heading">
+            <div className="section-title">
+              <FlaskConical size={18} />
+              <h3>Experiment Lab</h3>
+            </div>
+            <button type="button" onClick={handleExperiments} disabled={busy}>
+              {busy ? <RefreshCw className="spin" size={16} /> : <Play size={16} />}
+              Compare
+            </button>
+          </div>
+          {experiments ? (
+            <div className="experiment-grid">
+              {experiments.results.map((result) => (
+                <article
+                  className={result.config.id === experiments.winner ? "experiment winner" : "experiment"}
+                  key={result.config.id}
+                >
+                  <div>
+                    <strong>{result.config.label}</strong>
+                    <span>top-k {result.config.top_k}</span>
+                  </div>
+                  <p>{result.config.description}</p>
+                  <dl>
+                    <div>
+                      <dt>Hit Rate</dt>
+                      <dd>{Math.round(result.summary.retrieval_hit_rate * 100)}%</dd>
+                    </div>
+                    <div>
+                      <dt>Citations</dt>
+                      <dd>{Math.round(result.summary.average_citation_coverage * 100)}%</dd>
+                    </div>
+                    <div>
+                      <dt>Latency</dt>
+                      <dd>{result.summary.average_latency_ms} ms</dd>
+                    </div>
+                    <div>
+                      <dt>Failures</dt>
+                      <dd>{result.summary.failure_count}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="empty-state">
+              Compare retrieval settings against the same curated evaluation set.
+            </p>
+          )}
+        </section>
       </section>
     </main>
   );
@@ -342,4 +448,3 @@ function Metric({ label, value }: { label: string; value: string | number }) {
     </div>
   );
 }
-

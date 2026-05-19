@@ -1,6 +1,7 @@
 import type {
   DocumentSummary,
   EvaluationSummary,
+  ExperimentRunResponse,
   IndexResponse,
   QueryResponse
 } from "./types";
@@ -49,6 +50,21 @@ export function demoIndex(): IndexResponse {
     document_count: 1,
     chunk_count: 5,
     chunks: [sampleChunk, dataHandlingChunk]
+  };
+}
+
+export function demoUpload(): IndexResponse {
+  return {
+    document_count: 1,
+    chunk_count: 4,
+    chunks: [
+      {
+        ...sampleChunk,
+        id: "uploaded-policy:chunk-0001",
+        document_id: "uploaded-policy",
+        document_title: "Uploaded Policy Brief"
+      }
+    ]
   };
 }
 
@@ -121,3 +137,54 @@ export function demoEvaluation(): EvaluationSummary {
   };
 }
 
+export function demoExperiments(): ExperimentRunResponse {
+  const base = demoEvaluation();
+  return {
+    run_id: "experiment-demo",
+    winner: "balanced",
+    results: [
+      {
+        config: {
+          id: "focused",
+          label: "Focused Retrieval",
+          top_k: 2,
+          description: "Prioritizes the strongest chunks to reduce noisy citations."
+        },
+        summary: {
+          ...base,
+          run_id: "eval-focused",
+          average_citation_coverage: 1,
+          average_latency_ms: 1.1
+        }
+      },
+      {
+        config: {
+          id: "balanced",
+          label: "Balanced Retrieval",
+          top_k: 4,
+          description: "Default setting for quality, latency, and evidence coverage."
+        },
+        summary: {
+          ...base,
+          run_id: "eval-balanced",
+          average_citation_coverage: 1,
+          average_latency_ms: 1
+        }
+      },
+      {
+        config: {
+          id: "broad",
+          label: "Broad Retrieval",
+          top_k: 6,
+          description: "Pulls more context for ambiguous review workflows."
+        },
+        summary: {
+          ...base,
+          run_id: "eval-broad",
+          average_citation_coverage: 0.92,
+          average_latency_ms: 1.6
+        }
+      }
+    ]
+  };
+}
