@@ -6,6 +6,8 @@ The app demonstrates a full applied AI workflow: document ingestion, chunking,
 retrieval, grounded answers, citations, evaluation metrics, failure visibility,
 and production-minded local deployment.
 
+Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
+
 ## What It Shows
 
 - Document parsing and chunking with source metadata.
