@@ -8,6 +8,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
@@ -25,6 +26,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.tsbuildinfo
 
 # App data and generated artifacts
 data/raw/
@@ -33,4 +35,3 @@ data/vectorstores/
 artifacts/
 mlruns/
 reports/generated/
-

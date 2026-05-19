@@ -1,0 +1,39 @@
+# Acme Analytics AI Governance Policy
+
+## Security Controls
+
+All customer documents must be encrypted in transit and at rest. Access to
+indexed documents is limited to approved workspace members. Production systems
+must log document ingestion events, query events, and administrative changes.
+Secrets must be stored in managed secret storage and must not be committed to
+source control.
+
+## Incident Response
+
+The incident response process starts with triage, severity assignment, and owner
+selection. Severity one incidents require notification to the security lead
+within fifteen minutes. The response team must preserve logs, document customer
+impact, apply containment, and complete a written post-incident review within
+five business days.
+
+## Vendor Review
+
+New AI vendors must complete security, privacy, and reliability review before
+handling internal or customer data. The review must document data retention,
+model training usage, regional processing, audit logging, subprocessors, and
+service-level commitments.
+
+## Data Handling
+
+Sensitive data is classified before ingestion. Documents containing regulated
+personal information must use redaction or approved private processing paths.
+Evaluation datasets should use synthetic or approved public data unless a data
+owner grants written approval.
+
+## Model Evaluation
+
+AI features must be evaluated before release. Evaluation reports should include
+answer quality, retrieval quality, citation coverage, latency, cost estimates,
+known failure modes, and rollback criteria. Any system that cannot cite source
+evidence must decline to answer rather than invent unsupported details.
+
