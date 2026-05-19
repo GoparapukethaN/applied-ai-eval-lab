@@ -123,3 +123,27 @@ class EvaluationSummary(BaseModel):
     failure_count: int
     items: list[EvaluationItem]
 
+
+class ExperimentConfig(BaseModel):
+    id: str
+    label: str
+    top_k: int = Field(ge=1, le=12)
+    description: str
+
+
+class ExperimentResult(BaseModel):
+    config: ExperimentConfig
+    summary: EvaluationSummary
+
+
+class ExperimentRunResponse(BaseModel):
+    run_id: str
+    winner: str
+    results: list[ExperimentResult]
+
+
+class ReportSummary(BaseModel):
+    kind: str
+    run_id: str
+    filename: str
+    created_at: datetime

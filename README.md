@@ -11,10 +11,13 @@ Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
 ## What It Shows
 
 - Document parsing and chunking with source metadata.
+- PDF, TXT, and Markdown upload support in API mode.
 - Local deterministic retrieval that runs without API keys.
 - Grounded answer generation with citation evidence.
 - Evaluation metrics for retrieval hit rate, citation coverage, latency, cost,
   and failure categories.
+- Experiment comparison for focused, balanced, and broad retrieval settings.
+- Local JSON report artifacts for evaluation and experiment runs.
 - A live dashboard for reviewing answers, evidence, and evaluation runs.
 - Tests, Docker setup, typed API contracts, and clear development commands.
 
@@ -100,6 +103,8 @@ npm run build
 4. Review retrieved chunks and similarity scores.
 5. Run the curated evaluation set.
 6. Review retrieval hit rate, citation coverage, latency, and failures.
+7. Run the experiment comparison to inspect retrieval tradeoffs.
+8. Inspect local report artifacts under `artifacts/reports` in API mode.
 
 ## Safety and Secrets
 
@@ -111,10 +116,13 @@ only. Real keys and private documents should never be committed.
 
 - Retrieval uses deterministic token-frequency vectors for local repeatability.
 - Answer generation is extractive and grounded to retrieved text.
-- Uploaded PDF parsing and hosted deployment are planned follow-up milestones.
-- Provider comparison, reranking, and persistent experiment storage are planned
-  after the local v0.
+- Hosted backend deployment is planned after deployment credentials are
+  available.
+- Private provider adapters and reranking are planned follow-up milestones.
 
 ## Project Docs
 
 - [Enterprise AI Eval Lab design spec](docs/design/enterprise-ai-eval-lab.md)
+- [Model card](docs/model-card.md)
+- [Data card](docs/data-card.md)
+- [Case study](docs/case-study.md)

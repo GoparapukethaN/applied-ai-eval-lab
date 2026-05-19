@@ -1,22 +1,29 @@
 from time import perf_counter
+from uuid import uuid4
 
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile
 
 from app.core.config import get_settings
 from app.core.errors import bad_request
 from app.documents.chunking import chunk_documents
+from app.documents.parsing import parse_uploaded_document
 from app.documents.samples import load_sample_documents
+from app.evaluation.reports import list_reports, save_report
 from app.evaluation.scoring import DEFAULT_EVAL_EXAMPLES, summarize_evaluation
 from app.generation.grounded import build_grounded_answer
 from app.models.schemas import (
     DocumentSummary,
     EvaluationRequest,
     EvaluationSummary,
+    ExperimentConfig,
+    ExperimentResult,
+    ExperimentRunResponse,
     HealthResponse,
     IndexRequest,
     IndexResponse,
     QueryRequest,
     QueryResponse,
+    ReportSummary,
     SourceDocument,
 )
 from app.retrieval.vector_store import InMemoryVectorStore
@@ -81,6 +88,20 @@ def index_documents(request: IndexRequest) -> IndexResponse:
     )
 
 
+@router.post("/documents/upload", response_model=IndexResponse)
+async def upload_document(file: UploadFile = File(...)) -> IndexResponse:
+    settings = get_settings()
+    content = await file.read()
+    if len(content) > settings.max_upload_chars:
+        raise bad_request("Document is too large for this demo index.", "document_too_large")
+    document = parse_uploaded_document(
+        filename=file.filename or "uploaded-document.txt",
+        content_type=file.content_type,
+        content=content,
+    )
+    return index_documents(IndexRequest(custom_documents=[document]))
+
+
 @router.post("/query", response_model=QueryResponse)
 def query(request: QueryRequest) -> QueryResponse:
     if not VECTOR_STORE.chunks:
@@ -103,5 +124,65 @@ def query(request: QueryRequest) -> QueryResponse:
 def run_evaluation(request: EvaluationRequest) -> EvaluationSummary:
     examples = request.examples or DEFAULT_EVAL_EXAMPLES
     responses = [query(QueryRequest(question=example.question)) for example in examples]
-    return summarize_evaluation(examples, responses)
+    summary = summarize_evaluation(examples, responses)
+    save_report("evaluation", summary.run_id, summary)
+    return summary
 
+
+@router.post("/experiments/run", response_model=ExperimentRunResponse)
+def run_experiments(request: EvaluationRequest) -> ExperimentRunResponse:
+    examples = request.examples or DEFAULT_EVAL_EXAMPLES
+    configs = [
+        ExperimentConfig(
+            id="focused",
+            label="Focused Retrieval",
+            top_k=2,
+            description="Prioritizes the strongest chunks to reduce noisy citations.",
+        ),
+        ExperimentConfig(
+            id="balanced",
+            label="Balanced Retrieval",
+            top_k=4,
+            description="Default setting for quality, latency, and evidence coverage.",
+        ),
+        ExperimentConfig(
+            id="broad",
+            label="Broad Retrieval",
+            top_k=6,
+            description="Pulls more context for ambiguous questions and review workflows.",
+        ),
+    ]
+    results: list[ExperimentResult] = []
+    for config in configs:
+        responses = [
+            query(QueryRequest(question=example.question, top_k=config.top_k))
+            for example in examples
+        ]
+        results.append(
+            ExperimentResult(
+                config=config,
+                summary=summarize_evaluation(examples, responses),
+            )
+        )
+
+    winner = min(
+        results,
+        key=lambda result: (
+            result.summary.failure_count,
+            -result.summary.retrieval_hit_rate,
+            -result.summary.average_citation_coverage,
+            result.summary.average_latency_ms,
+        ),
+    )
+    response = ExperimentRunResponse(
+        run_id=f"experiment-{uuid4().hex[:8]}",
+        winner=winner.config.id,
+        results=results,
+    )
+    save_report("experiment", response.run_id, response)
+    return response
+
+
+@router.get("/reports", response_model=list[ReportSummary])
+def reports() -> list[ReportSummary]:
+    return list_reports()

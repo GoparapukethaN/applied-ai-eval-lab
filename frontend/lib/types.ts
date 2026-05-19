@@ -75,3 +75,20 @@ export type EvaluationSummary = {
   items: EvaluationItem[];
 };
 
+export type ExperimentConfig = {
+  id: string;
+  label: string;
+  top_k: number;
+  description: string;
+};
+
+export type ExperimentResult = {
+  config: ExperimentConfig;
+  summary: EvaluationSummary;
+};
+
+export type ExperimentRunResponse = {
+  run_id: string;
+  winner: string;
+  results: ExperimentResult[];
+};

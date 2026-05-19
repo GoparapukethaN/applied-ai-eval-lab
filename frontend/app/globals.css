@@ -47,6 +47,29 @@ button {
   padding: 9px 13px;
 }
 
+label.upload-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: center;
+  min-height: 38px;
+  padding: 9px 13px;
+}
+
+label.upload-button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+label.upload-button input {
+  display: none;
+}
+
 button:hover {
   background: var(--accent-strong);
 }
@@ -264,6 +287,7 @@ textarea {
 .answer-panel,
 .evidence-panel,
 .evaluation-panel,
+.experiment-panel,
 .metrics-panel {
   display: flex;
   flex-direction: column;
@@ -323,18 +347,68 @@ button.ghost:hover {
 
 .citation-list,
 .evidence-list,
-.eval-table {
+.eval-table,
+.experiment-grid {
   display: grid;
   gap: 10px;
 }
 
 .citation,
 .evidence,
-.eval-row {
+.eval-row,
+.experiment {
   background: #fafbf9;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px;
+}
+
+.experiment-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.experiment.winner {
+  border-color: #95cbb3;
+  box-shadow: inset 0 0 0 1px #95cbb3;
+}
+
+.experiment div,
+.experiment dl {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.experiment span {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.experiment p {
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 10px 0;
+}
+
+.experiment dl {
+  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.experiment dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.experiment dd {
+  font-weight: 800;
+  margin: 3px 0 0;
 }
 
 .citation {
@@ -419,6 +493,7 @@ button.ghost:hover {
 
   .sidebar,
   .grid.two,
+  .experiment-grid,
   .metric-grid.eval {
     grid-template-columns: 1fr;
   }
@@ -438,4 +513,3 @@ button.ghost:hover {
     grid-template-columns: 1fr;
   }
 }
-
