@@ -34,6 +34,8 @@ failure categories, and release gate reasons.
 - Docker setup for local full-stack runs.
 - Tests for chunking, upload parsing, retrieval, evaluation, and API flow.
 
+Demo screenshot: [static-demo-query-eval.png](assets/static-demo-query-eval.png)
+
 ## What Worked
 
 - Keeping the public demo keyless made deployment straightforward and safe.

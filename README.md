@@ -8,6 +8,8 @@ and a deployment-aware local setup.
 
 Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
 
+![Applied AI Eval Lab static demo showing an indexed policy, grounded answer, citations, retrieved chunks, and evaluation gate metrics](docs/assets/static-demo-query-eval.png)
+
 ## What It Shows
 
 - Document parsing and chunking with source metadata.
