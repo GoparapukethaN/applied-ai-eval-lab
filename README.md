@@ -98,6 +98,8 @@ Current verification status: backend tests pass (`15 passed`), frontend audit ha
 `0 vulnerabilities`, typecheck/build/static export pass, and Docker Compose config
 parses cleanly.
 
+Latest local verification details: [docs/verification.md](docs/verification.md).
+
 ## Demo Flow
 
 1. Index the sample enterprise policy document.
@@ -129,6 +131,7 @@ only. Real keys and private documents should never be committed.
 - [Model card](docs/model-card.md)
 - [Data card](docs/data-card.md)
 - [Case study](docs/case-study.md)
+- [Verification](docs/verification.md)
 
 ## License
 
