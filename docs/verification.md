@@ -16,6 +16,7 @@ Result:
 - Frontend typecheck: passed
 - Frontend production build: passed
 - Static GitHub Pages export: passed
+- Static demo browser QA: passed on desktop and mobile
 - Docker Compose config validation: passed
 - Docker smoke check: passed
 
@@ -43,6 +44,21 @@ Static demo data coverage:
 - Demo corpus chunk IDs are unique
 - Starter-question citations point to retrieved chunks
 - Demo evaluation item count matches the reported example count
+
+Static demo browser QA command:
+
+```bash
+cd frontend
+npm run verify:static-demo
+```
+
+Static demo browser QA coverage:
+
+- Serves the exported `frontend/out` build under the GitHub Pages base path
+- Runs desktop and mobile viewports
+- Drives indexing, query, evaluation, and experiment comparison
+- Checks cited answer text, release gate output, experiment output, console issues, and
+  horizontal overflow
 
 This is a local verification artifact. Hosted CI can be added later when Actions minutes
 and workflow permissions are available, but the current proof path is intentionally

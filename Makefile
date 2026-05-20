@@ -1,7 +1,7 @@
 PYTHON ?= python3
 NPM ?= npm
 
-.PHONY: install-backend install-frontend test-backend audit verify-demo-data typecheck build build-pages compose-check docker-check verify
+.PHONY: install-backend install-frontend test-backend audit verify-demo-data typecheck build build-pages verify-static-demo compose-check docker-check verify
 
 install-backend:
 	$(PYTHON) -m pip install -e "backend[dev]"
@@ -26,6 +26,9 @@ build:
 
 build-pages:
 	cd frontend && $(NPM) run build:pages
+
+verify-static-demo:
+	cd frontend && $(NPM) run verify:static-demo
 
 compose-check:
 	docker compose config --quiet

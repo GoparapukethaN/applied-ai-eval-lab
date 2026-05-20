@@ -16,6 +16,7 @@ fi
   npm run typecheck
   npm run build
   npm run build:pages
+  npm run verify:static-demo
 )
 
 docker compose config --quiet

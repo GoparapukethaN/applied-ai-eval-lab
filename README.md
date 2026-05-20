@@ -102,15 +102,17 @@ make verify-demo-data
 make typecheck
 make build
 make build-pages
+make verify-static-demo
 make compose-check
 make docker-check
 ```
 
 Current verification status: backend tests pass (`21 passed`), frontend audit has
 `0 vulnerabilities`, static demo data checks pass, typecheck/build/static export pass,
-and Docker Compose config parses cleanly. The Docker smoke check builds the
-backend/dashboard stack and verifies health, sample indexing, grounded query,
-evaluation, reports, dashboard CORS, and dashboard readiness.
+tracked static demo browser QA passes on desktop/mobile, and Docker Compose config parses
+cleanly. The Docker smoke check builds the backend/dashboard stack and verifies health,
+sample indexing, grounded query, evaluation, reports, dashboard CORS, and dashboard
+readiness.
 
 Latest local verification details: [docs/verification.md](docs/verification.md).
 

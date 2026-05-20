@@ -8,7 +8,8 @@
     "build:pages": "NEXT_PUBLIC_DEMO_MODE=true NEXT_PUBLIC_BASE_PATH=/applied-ai-eval-lab EXPORT_MODE=true next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "verify:demo-data": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-demo-data.mjs"
+    "verify:demo-data": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-demo-data.mjs",
+    "verify:static-demo": "node scripts/verify-static-demo.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.561.0",
@@ -17,6 +18,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
