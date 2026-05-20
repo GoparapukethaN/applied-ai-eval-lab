@@ -19,7 +19,4 @@ fi
   npm run verify:static-demo
 )
 
-docker compose config --quiet
-./scripts/verify-docker.sh
-
 echo "local verification passed"

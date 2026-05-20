@@ -226,9 +226,10 @@ Required tests:
 - Empty index and invalid document cases return structured errors.
 
 The local verification path covers backend tests, frontend audit, frontend
-type-checking, builds, static export, and Docker Compose validation. Hosted CI
-can be added later if it is useful, but the project stays verifiable from a clean
-local setup.
+type-checking, builds, and static export without requiring Docker. Docker Compose
+validation and stack smoke checks stay as separate full-stack verification. Hosted CI
+can be added later if it is useful, but the project stays verifiable from a clean local
+setup.
 
 ## Repository State
 

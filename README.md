@@ -89,7 +89,7 @@ The static files are written to `frontend/out`.
 
 ## Verification
 
-Run the full local verification path from the repo root:
+Run the Docker-free local verification path from the repo root:
 
 ```bash
 make verify
@@ -105,16 +105,22 @@ make typecheck
 make build
 make build-pages
 make verify-static-demo
+```
+
+If Docker is installed, run the container checks separately:
+
+```bash
 make compose-check
 make docker-check
+# or
+make verify-full
 ```
 
 Current verification status: backend tests pass (`21 passed`), frontend audit has
 `0 vulnerabilities`, static demo data checks pass, typecheck/build/static export pass,
-tracked static demo browser QA passes on desktop/mobile, and Docker Compose config parses
-cleanly. The Docker smoke check builds the backend/dashboard stack and verifies health,
-sample indexing, grounded query, evaluation, reports, dashboard CORS, and dashboard
-readiness.
+and tracked static demo browser QA passes on desktop/mobile. The separate Docker smoke
+check builds the backend/dashboard stack and verifies health, sample indexing, grounded
+query, evaluation, reports, dashboard CORS, and dashboard readiness.
 
 Latest local verification details: [docs/verification.md](docs/verification.md).
 

@@ -31,11 +31,10 @@ mode supports real PDF, text, and Markdown upload parsing.
 - The eval gate makes failure modes inspectable before treating a run as releasable.
 - Static demo data is verified so the public GitHub Pages version stays deterministic.
 - Local verification covers backend tests, frontend audit/typecheck/build/static export,
-  static demo browser QA, Docker Compose config, and Docker smoke.
+  and static demo browser QA. Docker smoke is a separate full-stack check.
 
 ## Close
 
 The main lesson is that applied AI systems need evidence and regression checks around the
 model. A polished answer is not enough if I cannot inspect what was retrieved, what was
 cited, which facts were covered, and whether the release gate passed.
-

@@ -17,13 +17,13 @@ Result:
 - Frontend production build: passed
 - Static GitHub Pages export: passed
 - Static demo browser QA: passed on desktop and mobile
-- Docker Compose config validation: passed
-- Docker smoke check: passed
 
 Docker smoke command:
 
 ```bash
 make docker-check
+# or, for the full local + Docker path
+make verify-full
 ```
 
 Docker smoke coverage:
@@ -62,7 +62,8 @@ Static demo browser QA coverage:
 
 This is a local verification artifact. Hosted CI can be added later when Actions minutes
 and workflow permissions are available, but the current proof path is intentionally
-repeatable from a local checkout.
+repeatable from a local checkout. Docker is optional for the core `make verify` path and
+is used only for the separate container smoke checks.
 
 The evaluation response includes a pass/warn/fail gate with individual checks for
 example coverage, retrieval hit rate, expected-answer fact coverage, citation

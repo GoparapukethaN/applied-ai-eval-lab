@@ -1,7 +1,7 @@
 PYTHON ?= python3
 NPM ?= npm
 
-.PHONY: install-backend install-frontend test-backend audit verify-demo-data typecheck build build-pages verify-static-demo compose-check docker-check verify
+.PHONY: install-backend install-frontend test-backend audit verify-demo-data typecheck build build-pages verify-static-demo compose-check docker-check verify verify-full
 
 install-backend:
 	$(PYTHON) -m pip install -e "backend[dev]"
@@ -38,3 +38,5 @@ docker-check:
 
 verify:
 	./scripts/verify-local.sh
+
+verify-full: verify compose-check docker-check
