@@ -56,4 +56,4 @@ Demo screenshot: [static-demo-query-eval.png](assets/static-demo-query-eval.png)
 1. Add private provider adapters behind `.env` settings.
 2. Add persistent experiment reports without using Supabase.
 3. Add deployment for the backend when hosting credentials are available.
-4. Add screenshots and a short demo recording.
+4. Add a short demo recording now that the static demo screenshot is captured.

@@ -241,7 +241,7 @@ local setup.
 
 Remaining polish:
 
-1. Add screenshots and a short demo recording.
+1. Add a short demo recording now that the static demo screenshot is captured.
 2. Add backend deployment after credentials and runtime target are ready.
 3. Add hosted CI once Actions minutes and workflow permissions are available.
 4. Expand experiment reports as more retrieval/provider options are tested.
