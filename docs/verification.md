@@ -12,6 +12,7 @@ Result:
 
 - Backend tests: 21 passed
 - Frontend audit: 0 vulnerabilities
+- Static demo data contract: passed
 - Frontend typecheck: passed
 - Frontend production build: passed
 - Static GitHub Pages export: passed
@@ -35,6 +36,13 @@ Docker smoke coverage:
 - Report listing returns saved evaluation evidence
 - Dashboard CORS preflight passes for the configured frontend port
 - Dashboard readiness check passes
+
+Static demo data coverage:
+
+- Demo index/upload chunk counts match returned chunk arrays
+- Demo corpus chunk IDs are unique
+- Starter-question citations point to retrieved chunks
+- Demo evaluation item count matches the reported example count
 
 This is a local verification artifact. Hosted CI can be added later when Actions minutes
 and workflow permissions are available, but the current proof path is intentionally

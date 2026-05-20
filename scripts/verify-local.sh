@@ -12,11 +12,13 @@ fi
 (
   cd frontend
   npm audit --audit-level=moderate
+  npm run verify:demo-data
   npm run typecheck
   npm run build
   npm run build:pages
 )
 
 docker compose config --quiet
+./scripts/verify-docker.sh
 
 echo "local verification passed"

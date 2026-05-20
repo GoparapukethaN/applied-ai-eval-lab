@@ -1,7 +1,7 @@
 PYTHON ?= python3
 NPM ?= npm
 
-.PHONY: install-backend install-frontend test-backend audit typecheck build build-pages compose-check docker-check verify
+.PHONY: install-backend install-frontend test-backend audit verify-demo-data typecheck build build-pages compose-check docker-check verify
 
 install-backend:
 	$(PYTHON) -m pip install -e "backend[dev]"
@@ -14,6 +14,9 @@ test-backend:
 
 audit:
 	cd frontend && $(NPM) audit --audit-level=moderate
+
+verify-demo-data:
+	cd frontend && $(NPM) run verify:demo-data
 
 typecheck:
 	cd frontend && $(NPM) run typecheck

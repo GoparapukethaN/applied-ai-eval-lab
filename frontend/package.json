@@ -7,7 +7,8 @@
     "build": "next build",
     "build:pages": "NEXT_PUBLIC_DEMO_MODE=true NEXT_PUBLIC_BASE_PATH=/applied-ai-eval-lab EXPORT_MODE=true next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:demo-data": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-demo-data.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.561.0",

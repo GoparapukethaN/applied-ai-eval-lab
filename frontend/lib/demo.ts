@@ -7,7 +7,7 @@ import type {
 } from "./types";
 
 const sampleChunk = {
-  id: "acme-ai-governance-policy:chunk-0004",
+  id: "acme-ai-governance-policy:chunk-0005",
   document_id: "acme-ai-governance-policy",
   document_title: "Acme Analytics AI Governance Policy",
   section: "Model Evaluation",
@@ -55,7 +55,7 @@ const vendorChunk = {
 };
 
 const dataHandlingChunk = {
-  id: "acme-ai-governance-policy:chunk-0003",
+  id: "acme-ai-governance-policy:chunk-0004",
   document_id: "acme-ai-governance-policy",
   document_title: "Acme Analytics AI Governance Policy",
   section: "Data Handling",
@@ -92,7 +92,7 @@ export function demoIndex(): IndexResponse {
 export function demoUpload(): IndexResponse {
   return {
     document_count: 1,
-    chunk_count: 4,
+    chunk_count: 1,
     chunks: [
       {
         ...sampleChunk,
