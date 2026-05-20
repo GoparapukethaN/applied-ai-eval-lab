@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   title: "Applied AI Eval Lab",
-  description: "Enterprise document intelligence and AI evaluation workspace"
+  description: "Document intelligence and AI evaluation workspace",
+  icons: {
+    icon: `${basePath}/icon.svg`
+  }
 };
 
 export default function RootLayout({
@@ -17,4 +22,3 @@ export default function RootLayout({
     </html>
   );
 }
-

@@ -217,7 +217,7 @@ export default function Home() {
         <section className="panel">
           <div className="panel-heading">
             <ShieldCheck size={18} />
-            <h2>Production Notes</h2>
+            <h2>Reliability Notes</h2>
           </div>
           <ul className="check-list">
             <li>Provider-neutral API boundaries</li>
@@ -232,7 +232,7 @@ export default function Home() {
       <section className="main-panel">
         <header className="topbar">
           <div>
-            <p className="eyebrow">Enterprise AI evaluation</p>
+            <p className="eyebrow">Applied AI evaluation</p>
             <h2>Ground answers, inspect evidence, measure quality.</h2>
           </div>
           <div className="status-pill">
