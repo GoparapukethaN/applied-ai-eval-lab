@@ -37,4 +37,5 @@ def test_evaluation_run_returns_summary() -> None:
     payload = response.json()
     assert payload["example_count"] >= 4
     assert "retrieval_hit_rate" in payload
-
+    assert payload["gate"]["verdict"] in {"pass", "warn", "fail"}
+    assert payload["gate"]["checks"]

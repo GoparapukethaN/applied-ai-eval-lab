@@ -18,10 +18,12 @@ The system starts with a local, deterministic baseline:
 - Retrieve chunks with repeatable vector scoring.
 - Generate extractive grounded answers with citations.
 - Run curated evaluation examples.
+- Apply a pass/warn/fail gate before treating a run as releasable.
 - Compare retrieval settings in an experiment lab.
 
 This baseline is deliberately transparent. A reviewer can inspect the retrieved
-chunks, answer citations, latency, cost estimate, and failure categories.
+chunks, answer citations, latency, cost estimate, failure categories, and release
+gate reasons.
 
 ## Engineering Decisions
 

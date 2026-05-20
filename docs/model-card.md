@@ -41,6 +41,8 @@ The curated evaluation set checks:
 - Failure category count.
 - Average latency.
 - Estimated local run cost.
+- Release-gate verdict based on evidence coverage, citation coverage, failure
+  count, and latency.
 
 The experiment lab compares focused, balanced, and broad retrieval settings over
 the same evaluation examples.
@@ -58,4 +60,3 @@ the same evaluation examples.
 - Add private provider adapters behind environment variables.
 - Add reranking and persistent experiment reports.
 - Add hosted backend deployment once deployment credentials are available.
-

@@ -16,6 +16,7 @@ Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
 - Grounded answer generation with citation evidence.
 - Evaluation metrics for retrieval hit rate, citation coverage, latency, cost,
   and failure categories.
+- Pass/warn/fail evaluation gate for release-style review.
 - Experiment comparison for focused, balanced, and broad retrieval settings.
 - Local JSON report artifacts for evaluation and experiment runs.
 - A live dashboard for reviewing answers, evidence, and evaluation runs.
@@ -107,7 +108,8 @@ Latest local verification details: [docs/verification.md](docs/verification.md).
 3. Inspect the grounded answer and citations.
 4. Review retrieved chunks and similarity scores.
 5. Run the curated evaluation set.
-6. Review retrieval hit rate, citation coverage, latency, and failures.
+6. Review retrieval hit rate, citation coverage, latency, failures, and the
+   evaluation gate verdict.
 7. Run the experiment comparison to inspect retrieval tradeoffs.
 8. Inspect local report artifacts under `artifacts/reports` in API mode.
 

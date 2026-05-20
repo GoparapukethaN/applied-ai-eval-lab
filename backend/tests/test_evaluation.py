@@ -61,4 +61,11 @@ def test_summarize_evaluation_computes_quality_metrics() -> None:
     assert summary.retrieval_hit_rate == 1.0
     assert summary.failure_count == 0
     assert summary.average_latency_ms == 10
+    assert summary.gate.verdict == "pass"
 
+
+def test_evaluation_gate_fails_without_examples() -> None:
+    summary = summarize_evaluation([], [])
+
+    assert summary.gate.verdict == "fail"
+    assert "The gate needs at least one curated evaluation example." in summary.gate.reasons

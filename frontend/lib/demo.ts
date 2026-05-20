@@ -119,6 +119,52 @@ export function demoEvaluation(): EvaluationSummary {
     average_latency_ms: 1,
     estimated_total_cost_usd: 0.000032,
     failure_count: 0,
+    gate: {
+      verdict: "pass",
+      reasons: [],
+      checks: [
+        {
+          name: "eval_examples",
+          observed: questions.length,
+          threshold: "> 0",
+          passed: true,
+          severity: "blocker",
+          message: "The gate needs at least one curated evaluation example."
+        },
+        {
+          name: "retrieval_hit_rate",
+          observed: 1,
+          threshold: ">= 0.75",
+          passed: true,
+          severity: "blocker",
+          message: "Retrieved evidence should cover the expected source facts."
+        },
+        {
+          name: "citation_coverage",
+          observed: 1,
+          threshold: ">= 0.75",
+          passed: true,
+          severity: "blocker",
+          message: "Answers should cite the chunks they use."
+        },
+        {
+          name: "failure_count",
+          observed: 0,
+          threshold: "<= 0",
+          passed: true,
+          severity: "blocker",
+          message: "Known failure categories should be resolved before release."
+        },
+        {
+          name: "average_latency_ms",
+          observed: 1,
+          threshold: "<= 2000",
+          passed: true,
+          severity: "warning",
+          message: "Average latency should stay inside the review budget."
+        }
+      ]
+    },
     items: questions.map((question, index) => ({
       id: `demo-${index + 1}`,
       question,

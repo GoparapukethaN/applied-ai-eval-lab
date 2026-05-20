@@ -113,6 +113,21 @@ class EvaluationItem(BaseModel):
     citations: list[Citation]
 
 
+class EvaluationGateCheck(BaseModel):
+    name: str
+    observed: float
+    threshold: str
+    passed: bool
+    severity: Literal["blocker", "warning"]
+    message: str
+
+
+class EvaluationGate(BaseModel):
+    verdict: Literal["pass", "warn", "fail"]
+    reasons: list[str]
+    checks: list[EvaluationGateCheck]
+
+
 class EvaluationSummary(BaseModel):
     run_id: str
     example_count: int
@@ -121,6 +136,7 @@ class EvaluationSummary(BaseModel):
     average_latency_ms: float
     estimated_total_cost_usd: float
     failure_count: int
+    gate: EvaluationGate
     items: list[EvaluationItem]
 
 

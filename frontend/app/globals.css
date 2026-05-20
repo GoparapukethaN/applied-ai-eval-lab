@@ -348,6 +348,7 @@ button.ghost:hover {
 .citation-list,
 .evidence-list,
 .eval-table,
+.gate-checks,
 .experiment-grid {
   display: grid;
   gap: 10px;
@@ -356,11 +357,71 @@ button.ghost:hover {
 .citation,
 .evidence,
 .eval-row,
+.gate-check,
 .experiment {
   background: #fafbf9;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px;
+}
+
+.gate-banner {
+  border: 1px solid #c7ded2;
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.gate-banner.pass {
+  background: #edf7f0;
+  color: #174b37;
+}
+
+.gate-banner.warn {
+  background: #fff7e8;
+  color: #7a4c0b;
+}
+
+.gate-banner.fail {
+  background: #fff0ec;
+  color: #7c321d;
+}
+
+.gate-banner span {
+  line-height: 1.45;
+}
+
+.gate-checks {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gate-check div {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.gate-check strong {
+  text-transform: capitalize;
+}
+
+.gate-check span {
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gate-check.fail span {
+  color: var(--warning);
+}
+
+.gate-check p {
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 8px 0 0;
 }
 
 .experiment-grid {
@@ -494,6 +555,7 @@ button.ghost:hover {
   .sidebar,
   .grid.two,
   .experiment-grid,
+  .gate-checks,
   .metric-grid.eval {
     grid-template-columns: 1fr;
   }

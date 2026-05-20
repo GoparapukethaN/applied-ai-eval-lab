@@ -72,6 +72,18 @@ export type EvaluationSummary = {
   average_latency_ms: number;
   estimated_total_cost_usd: number;
   failure_count: number;
+  gate: {
+    verdict: "pass" | "warn" | "fail";
+    reasons: string[];
+    checks: {
+      name: string;
+      observed: number;
+      threshold: string;
+      passed: boolean;
+      severity: "blocker" | "warning";
+      message: string;
+    }[];
+  };
   items: EvaluationItem[];
 };
 

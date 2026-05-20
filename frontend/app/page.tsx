@@ -364,22 +364,51 @@ export default function Home() {
               label="Avg Latency"
               value={evaluation ? `${evaluation.average_latency_ms} ms` : "0 ms"}
             />
-            <Metric label="Failures" value={evaluation?.failure_count ?? 0} />
+            <Metric
+              label="Gate"
+              value={evaluation ? evaluation.gate.verdict.toUpperCase() : "Not run"}
+            />
           </div>
 
           {evaluation ? (
-            <div className="eval-table">
-              {evaluation.items.map((item) => (
-                <article key={item.id} className="eval-row">
-                  <div>
-                    <strong>{item.question}</strong>
-                    <span>{item.retrieval_hit ? "Context hit" : "Needs review"}</span>
-                  </div>
-                  <p>{item.actual_answer}</p>
-                  {item.failure_category ? <small>{item.failure_category}</small> : null}
-                </article>
-              ))}
-            </div>
+            <>
+              <div className={`gate-banner ${evaluation.gate.verdict}`}>
+                <strong>Release gate: {evaluation.gate.verdict.toUpperCase()}</strong>
+                <span>
+                  {evaluation.gate.reasons.length
+                    ? evaluation.gate.reasons.join(" ")
+                    : "All configured evaluation checks passed."}
+                </span>
+              </div>
+              <div className="eval-table">
+                {evaluation.items.map((item) => (
+                  <article key={item.id} className="eval-row">
+                    <div>
+                      <strong>{item.question}</strong>
+                      <span>{item.retrieval_hit ? "Context hit" : "Needs review"}</span>
+                    </div>
+                    <p>{item.actual_answer}</p>
+                    {item.failure_category ? <small>{item.failure_category}</small> : null}
+                  </article>
+                ))}
+              </div>
+              <div className="gate-checks">
+                {evaluation.gate.checks.map((check) => (
+                  <article
+                    key={check.name}
+                    className={check.passed ? "gate-check pass" : "gate-check fail"}
+                  >
+                    <div>
+                      <strong>{check.name.replaceAll("_", " ")}</strong>
+                      <span>{check.passed ? "pass" : check.severity}</span>
+                    </div>
+                    <p>
+                      observed {check.observed} / threshold {check.threshold}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </>
           ) : (
             <p className="empty-state">Run the curated eval set to see quality signals.</p>
           )}
