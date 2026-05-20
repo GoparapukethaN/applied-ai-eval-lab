@@ -16,6 +16,25 @@ Result:
 - Frontend production build: passed
 - Static GitHub Pages export: passed
 - Docker Compose config validation: passed
+- Docker smoke check: passed
+
+Docker smoke command:
+
+```bash
+make docker-check
+```
+
+Docker smoke coverage:
+
+- Backend and dashboard images build locally
+- Stack starts on temporary local ports
+- `/health` returns the expected service
+- Sample document indexing succeeds
+- Grounded query returns citations and retrieved chunks
+- Evaluation run returns a gate verdict
+- Report listing returns saved evaluation evidence
+- Dashboard CORS preflight passes for the configured frontend port
+- Dashboard readiness check passes
 
 This is a local verification artifact. Hosted CI can be added later when Actions minutes
 and workflow permissions are available, but the current proof path is intentionally

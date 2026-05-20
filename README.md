@@ -66,6 +66,12 @@ docker compose up --build
 Frontend runs on `http://localhost:3000`; backend runs on
 `http://localhost:8000`.
 
+Repeatable Docker smoke check:
+
+```bash
+make docker-check
+```
+
 ## Public Static Demo
 
 The frontend can also be exported as a static demo with safe sample data. This
@@ -96,11 +102,14 @@ make typecheck
 make build
 make build-pages
 make compose-check
+make docker-check
 ```
 
 Current verification status: backend tests pass (`21 passed`), frontend audit has
 `0 vulnerabilities`, typecheck/build/static export pass, and Docker Compose config
-parses cleanly.
+parses cleanly. The Docker smoke check builds the backend/dashboard stack and verifies
+health, sample indexing, grounded query, evaluation, reports, dashboard CORS, and
+dashboard readiness.
 
 Latest local verification details: [docs/verification.md](docs/verification.md).
 
