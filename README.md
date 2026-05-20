@@ -18,7 +18,8 @@ Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
   and failure categories.
 - Pass/warn/fail evaluation gate for release-style review.
 - Experiment comparison for focused, balanced, and broad retrieval settings.
-- Local JSON report artifacts for evaluation and experiment runs.
+- Local JSON and Markdown report artifacts for evaluation and experiment runs.
+- Report listing/detail endpoints for reviewing saved evaluation evidence.
 - A live dashboard for reviewing answers, evidence, and evaluation runs.
 - Tests, Docker setup, typed API contracts, and clear development commands.
 
@@ -95,7 +96,7 @@ make build-pages
 make compose-check
 ```
 
-Current verification status: backend tests pass (`15 passed`), frontend audit has
+Current verification status: backend tests pass (`19 passed`), frontend audit has
 `0 vulnerabilities`, typecheck/build/static export pass, and Docker Compose config
 parses cleanly.
 
@@ -111,7 +112,9 @@ Latest local verification details: [docs/verification.md](docs/verification.md).
 6. Review retrieval hit rate, citation coverage, latency, failures, and the
    evaluation gate verdict.
 7. Run the experiment comparison to inspect retrieval tradeoffs.
-8. Inspect local report artifacts under `artifacts/reports` in API mode.
+8. Inspect local JSON/Markdown report artifacts under `artifacts/reports` in API mode.
+9. Use `/reports`, `/reports/{filename}`, or `/reports/{filename}/markdown` to review
+   saved report evidence through the API.
 
 ## Safety and Secrets
 

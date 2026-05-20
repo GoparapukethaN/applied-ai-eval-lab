@@ -162,4 +162,5 @@ class ReportSummary(BaseModel):
     kind: str
     run_id: str
     filename: str
+    markdown_filename: str | None = None
     created_at: datetime

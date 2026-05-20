@@ -10,7 +10,7 @@ make verify
 
 Result:
 
-- Backend tests: 16 passed
+- Backend tests: 19 passed
 - Frontend audit: 0 vulnerabilities
 - Frontend typecheck: passed
 - Frontend production build: passed
@@ -23,3 +23,5 @@ repeatable from a local checkout.
 
 The evaluation response includes a pass/warn/fail gate with individual checks for
 example coverage, retrieval hit rate, citation coverage, failure count, and latency.
+Evaluation and experiment runs also write paired JSON/Markdown report artifacts that can
+be listed through `/reports` and fetched through the report detail endpoints.

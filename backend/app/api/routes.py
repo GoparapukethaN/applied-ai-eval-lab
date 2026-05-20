@@ -2,13 +2,14 @@ from time import perf_counter
 from uuid import uuid4
 
 from fastapi import APIRouter, File, UploadFile
+from fastapi.responses import PlainTextResponse
 
 from app.core.config import get_settings
 from app.core.errors import bad_request
 from app.documents.chunking import chunk_documents
 from app.documents.parsing import parse_uploaded_document
 from app.documents.samples import load_sample_documents
-from app.evaluation.reports import list_reports, save_report
+from app.evaluation.reports import load_report, load_report_markdown, list_reports, save_report
 from app.evaluation.scoring import DEFAULT_EVAL_EXAMPLES, summarize_evaluation
 from app.generation.grounded import build_grounded_answer
 from app.models.schemas import (
@@ -186,3 +187,19 @@ def run_experiments(request: EvaluationRequest) -> ExperimentRunResponse:
 @router.get("/reports", response_model=list[ReportSummary])
 def reports() -> list[ReportSummary]:
     return list_reports()
+
+
+@router.get("/reports/{filename}/markdown", response_class=PlainTextResponse)
+def report_markdown(filename: str) -> str:
+    try:
+        return load_report_markdown(filename)
+    except FileNotFoundError:
+        raise bad_request("Report markdown was not found.", "unknown_report") from None
+
+
+@router.get("/reports/{filename}")
+def report_detail(filename: str) -> dict:
+    try:
+        return load_report(filename)
+    except FileNotFoundError:
+        raise bad_request("Report was not found.", "unknown_report") from None
