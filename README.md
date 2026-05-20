@@ -152,6 +152,7 @@ only. Real keys and private documents should never be committed.
 - [Model card](docs/model-card.md)
 - [Data card](docs/data-card.md)
 - [Case study](docs/case-study.md)
+- [Demo recording script](docs/demo-script.md)
 - [Verification](docs/verification.md)
 
 ## License
