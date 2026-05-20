@@ -11,6 +11,7 @@ fi
 
 (
   cd frontend
+  npm audit --audit-level=moderate
   npm run typecheck
   npm run build
   npm run build:pages

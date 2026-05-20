@@ -14,8 +14,8 @@ Live demo: https://goparapukethan.github.io/applied-ai-eval-lab/
 - PDF, TXT, and Markdown upload support in API mode.
 - Local deterministic retrieval that runs without API keys.
 - Grounded answer generation with citation evidence.
-- Evaluation metrics for retrieval hit rate, citation coverage, latency, cost,
-  and failure categories.
+- Evaluation metrics for retrieval hit rate, expected-answer fact coverage,
+  citation coverage, latency, cost, and failure categories.
 - Pass/warn/fail evaluation gate for release-style review.
 - Experiment comparison for focused, balanced, and broad retrieval settings.
 - Local JSON and Markdown report artifacts for evaluation and experiment runs.
@@ -69,7 +69,8 @@ Frontend runs on `http://localhost:3000`; backend runs on
 ## Public Static Demo
 
 The frontend can also be exported as a static demo with safe sample data. This
-mode does not need a backend or API keys.
+mode does not need a backend or API keys. Upload parsing remains available in
+API mode so the public static page stays safe and deterministic.
 
 ```bash
 cd frontend
@@ -90,13 +91,14 @@ Or run the parts separately:
 
 ```bash
 make test-backend
+make audit
 make typecheck
 make build
 make build-pages
 make compose-check
 ```
 
-Current verification status: backend tests pass (`19 passed`), frontend audit has
+Current verification status: backend tests pass (`21 passed`), frontend audit has
 `0 vulnerabilities`, typecheck/build/static export pass, and Docker Compose config
 parses cleanly.
 
@@ -109,8 +111,8 @@ Latest local verification details: [docs/verification.md](docs/verification.md).
 3. Inspect the grounded answer and citations.
 4. Review retrieved chunks and similarity scores.
 5. Run the curated evaluation set.
-6. Review retrieval hit rate, citation coverage, latency, failures, and the
-   evaluation gate verdict.
+6. Review retrieval hit rate, answer-fact coverage, citation coverage, latency,
+   failures, and the evaluation gate verdict.
 7. Run the experiment comparison to inspect retrieval tradeoffs.
 8. Inspect local JSON/Markdown report artifacts under `artifacts/reports` in API mode.
 9. Use `/reports`, `/reports/{filename}`, or `/reports/{filename}/markdown` to review

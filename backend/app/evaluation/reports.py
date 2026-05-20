@@ -113,6 +113,7 @@ def _render_evaluation_markdown(run_id: str, payload: dict[str, Any]) -> str:
         "| --- | ---: |",
         f"| Examples | {payload.get('example_count', 0)} |",
         f"| Retrieval hit rate | {payload.get('retrieval_hit_rate', 0)} |",
+        f"| Answer fact coverage | {payload.get('average_answer_fact_coverage', 0)} |",
         f"| Citation coverage | {payload.get('average_citation_coverage', 0)} |",
         f"| Average latency | {payload.get('average_latency_ms', 0)} ms |",
         f"| Failure count | {payload.get('failure_count', 0)} |",
@@ -145,19 +146,20 @@ def _render_experiment_markdown(run_id: str, payload: dict[str, Any]) -> str:
         "",
         "## Results",
         "",
-        "| Config | Top K | Verdict | Hit Rate | Citation Coverage | Latency | Failures |",
-        "| --- | ---: | --- | ---: | ---: | ---: | ---: |",
+        "| Config | Top K | Verdict | Hit Rate | Answer Facts | Citation Coverage | Latency | Failures |",
+        "| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |",
     ]
     for result in payload.get("results", []):
         config = result.get("config", {})
         summary = result.get("summary", {})
         gate = summary.get("gate", {})
         lines.append(
-            "| {config_id} | {top_k} | {verdict} | {hit_rate} | {coverage} | {latency} ms | {failures} |".format(
+            "| {config_id} | {top_k} | {verdict} | {hit_rate} | {facts} | {coverage} | {latency} ms | {failures} |".format(
                 config_id=config.get("id", "unknown"),
                 top_k=config.get("top_k", "n/a"),
                 verdict=gate.get("verdict", "unknown"),
                 hit_rate=summary.get("retrieval_hit_rate", "n/a"),
+                facts=summary.get("average_answer_fact_coverage", "n/a"),
                 coverage=summary.get("average_citation_coverage", "n/a"),
                 latency=summary.get("average_latency_ms", "n/a"),
                 failures=summary.get("failure_count", "n/a"),

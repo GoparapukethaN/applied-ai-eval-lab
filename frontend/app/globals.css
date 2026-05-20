@@ -47,7 +47,7 @@ button {
   padding: 9px 13px;
 }
 
-label.upload-button {
+.upload-button {
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -62,11 +62,11 @@ label.upload-button {
   padding: 9px 13px;
 }
 
-label.upload-button:hover {
+.upload-button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.16);
 }
 
-label.upload-button input {
+.upload-button input {
   display: none;
 }
 
@@ -321,7 +321,7 @@ button.ghost:hover {
 }
 
 .metric-grid.eval {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 }
 
 .metric {

@@ -37,12 +37,13 @@ of fabricating unsupported details.
 The curated evaluation set checks:
 
 - Retrieval hit rate.
+- Expected-answer fact coverage.
 - Citation coverage.
 - Failure category count.
 - Average latency.
 - Estimated local run cost.
-- Release-gate verdict based on evidence coverage, citation coverage, failure
-  count, and latency.
+- Release-gate verdict based on evidence coverage, answer-fact coverage,
+  citation coverage, failure count, and latency.
 
 The experiment lab compares focused, balanced, and broad retrieval settings over
 the same evaluation examples.

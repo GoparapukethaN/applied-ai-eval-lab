@@ -171,6 +171,7 @@ def run_experiments(request: EvaluationRequest) -> ExperimentRunResponse:
         key=lambda result: (
             result.summary.failure_count,
             -result.summary.retrieval_hit_rate,
+            -result.summary.average_answer_fact_coverage,
             -result.summary.average_citation_coverage,
             result.summary.average_latency_ms,
         ),

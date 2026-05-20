@@ -10,8 +10,10 @@ from app.models.schemas import (
     EvaluationSummary,
     QueryResponse,
 )
+from app.retrieval.vector_store import tokenize
 
 MIN_RETRIEVAL_HIT_RATE = 0.75
+MIN_ANSWER_FACT_COVERAGE = 0.6
 MIN_CITATION_COVERAGE = 0.75
 MAX_FAILURE_COUNT = 0
 MAX_AVERAGE_LATENCY_MS = 2_000
@@ -60,11 +62,21 @@ def retrieval_hit(example: EvaluationExample, response: QueryResponse) -> bool:
     return any(keyword.lower() in searchable for keyword in example.expected_chunk_keywords)
 
 
+def answer_fact_coverage(example: EvaluationExample, response: QueryResponse) -> float:
+    expected_terms = set(tokenize(example.expected_answer))
+    if not expected_terms:
+        return 1.0
+    answer_terms = set(tokenize(response.answer))
+    return round(len(expected_terms & answer_terms) / len(expected_terms), 3)
+
+
 def classify_failure(example: EvaluationExample, response: QueryResponse) -> str | None:
     if not response.citations:
         return "no_citation"
     if not retrieval_hit(example, response):
         return "missed_relevant_context"
+    if answer_fact_coverage(example, response) < MIN_ANSWER_FACT_COVERAGE:
+        return "missing_expected_answer_facts"
     if response.confidence < 0.15:
         return "low_confidence"
     return None
@@ -77,6 +89,7 @@ def summarize_evaluation(
     items: list[EvaluationItem] = []
     for example, response in zip(examples, responses, strict=True):
         hit = retrieval_hit(example, response)
+        fact_coverage = answer_fact_coverage(example, response)
         failure = classify_failure(example, response)
         items.append(
             EvaluationItem(
@@ -85,6 +98,7 @@ def summarize_evaluation(
                 expected_answer=example.expected_answer,
                 actual_answer=response.answer,
                 retrieval_hit=hit,
+                answer_fact_coverage=fact_coverage,
                 citation_coverage=citation_coverage(response),
                 latency_ms=response.metadata.latency_ms,
                 estimated_cost_usd=response.metadata.estimated_cost_usd,
@@ -99,6 +113,7 @@ def summarize_evaluation(
             run_id=f"eval-{uuid4().hex[:8]}",
             example_count=0,
             retrieval_hit_rate=0.0,
+            average_answer_fact_coverage=0.0,
             average_citation_coverage=0.0,
             average_latency_ms=0.0,
             estimated_total_cost_usd=0.0,
@@ -106,6 +121,7 @@ def summarize_evaluation(
             gate=_build_gate(
                 example_count=0,
                 retrieval_hit_rate=0.0,
+                answer_fact_coverage=0.0,
                 citation_coverage=0.0,
                 average_latency_ms=0.0,
                 failure_count=0,
@@ -118,6 +134,10 @@ def summarize_evaluation(
         sum(item.citation_coverage for item in items) / example_count,
         3,
     )
+    answer_fact_coverage_score = round(
+        sum(item.answer_fact_coverage for item in items) / example_count,
+        3,
+    )
     average_latency_ms = round(sum(item.latency_ms for item in items) / example_count, 1)
     failure_count = sum(1 for item in items if item.failure_category)
 
@@ -125,6 +145,7 @@ def summarize_evaluation(
         run_id=f"eval-{uuid4().hex[:8]}",
         example_count=example_count,
         retrieval_hit_rate=retrieval_hit_rate,
+        average_answer_fact_coverage=answer_fact_coverage_score,
         average_citation_coverage=citation_coverage_score,
         average_latency_ms=average_latency_ms,
         estimated_total_cost_usd=round(sum(item.estimated_cost_usd for item in items), 6),
@@ -132,6 +153,7 @@ def summarize_evaluation(
         gate=_build_gate(
             example_count=example_count,
             retrieval_hit_rate=retrieval_hit_rate,
+            answer_fact_coverage=answer_fact_coverage_score,
             citation_coverage=citation_coverage_score,
             average_latency_ms=average_latency_ms,
             failure_count=failure_count,
@@ -144,6 +166,7 @@ def _build_gate(
     *,
     example_count: int,
     retrieval_hit_rate: float,
+    answer_fact_coverage: float,
     citation_coverage: float,
     average_latency_ms: float,
     failure_count: int,
@@ -172,6 +195,14 @@ def _build_gate(
             passed=citation_coverage >= MIN_CITATION_COVERAGE,
             severity="blocker",
             message="Answers should cite the chunks they use.",
+        ),
+        EvaluationGateCheck(
+            name="answer_fact_coverage",
+            observed=answer_fact_coverage,
+            threshold=f">= {MIN_ANSWER_FACT_COVERAGE}",
+            passed=answer_fact_coverage >= MIN_ANSWER_FACT_COVERAGE,
+            severity="blocker",
+            message="Answers should include the expected curated answer facts.",
         ),
         EvaluationGateCheck(
             name="failure_count",

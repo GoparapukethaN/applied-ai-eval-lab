@@ -16,6 +16,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 import {
+  DEMO_MODE,
   askQuestion,
   getSampleDocuments,
   indexSampleDocument,
@@ -60,6 +61,9 @@ export default function Home() {
         setDocuments(items);
         setActiveDocumentId(items[0]?.id ?? "");
         setStatus("Workspace ready");
+        if (DEMO_MODE && items[0]) {
+          void indexSampleDocument(items[0].id).then(setIndex);
+        }
       })
       .catch((caught: unknown) => {
         setError(caught instanceof Error ? caught.message : "Unable to load documents");
@@ -188,18 +192,25 @@ export default function Home() {
             {busy ? <RefreshCw className="spin" size={16} /> : <Play size={16} />}
             Index
           </button>
-          <label className="upload-button">
-            <Upload size={16} />
-            Upload PDF/TXT
-            <input
-              type="file"
-              accept=".pdf,.txt,.md,text/plain,application/pdf"
-              onChange={(event) => {
-                void handleUpload(event.target.files?.[0] ?? null);
-                event.currentTarget.value = "";
-              }}
-            />
-          </label>
+          {DEMO_MODE ? (
+            <button className="upload-button" type="button" disabled title="Uploads run in API mode">
+              <Upload size={16} />
+              API Upload
+            </button>
+          ) : (
+            <label className="upload-button">
+              <Upload size={16} />
+              Upload PDF/TXT
+              <input
+                type="file"
+                accept=".pdf,.txt,.md,text/plain,application/pdf"
+                onChange={(event) => {
+                  void handleUpload(event.target.files?.[0] ?? null);
+                  event.currentTarget.value = "";
+                }}
+              />
+            </label>
+          )}
           {selectedDocument ? (
             <dl className="mini-stats">
               <div>
@@ -222,7 +233,7 @@ export default function Home() {
           <ul className="check-list">
             <li>Provider-neutral API boundaries</li>
             <li>Local mode requires no API keys</li>
-            <li>PDF and text upload path</li>
+            <li>{DEMO_MODE ? "Upload parsing runs in API mode" : "PDF and text upload path"}</li>
             <li>Evaluation runs expose failures</li>
             <li>Citations trace answers to chunks</li>
           </ul>
@@ -357,6 +368,14 @@ export default function Home() {
               value={
                 evaluation
                   ? `${Math.round(evaluation.average_citation_coverage * 100)}%`
+                  : "0%"
+              }
+            />
+            <Metric
+              label="Answer Facts"
+              value={
+                evaluation
+                  ? `${Math.round(evaluation.average_answer_fact_coverage * 100)}%`
                   : "0%"
               }
             />

@@ -106,6 +106,7 @@ class EvaluationItem(BaseModel):
     expected_answer: str
     actual_answer: str
     retrieval_hit: bool
+    answer_fact_coverage: float
     citation_coverage: float
     latency_ms: int
     estimated_cost_usd: float
@@ -132,6 +133,7 @@ class EvaluationSummary(BaseModel):
     run_id: str
     example_count: int
     retrieval_hit_rate: float
+    average_answer_fact_coverage: float
     average_citation_coverage: float
     average_latency_ms: float
     estimated_total_cost_usd: float

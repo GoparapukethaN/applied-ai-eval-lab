@@ -22,8 +22,8 @@ The system starts with a local, deterministic baseline:
 - Compare retrieval settings in an experiment lab.
 
 This baseline is deliberately transparent. A reviewer can inspect the retrieved
-chunks, answer citations, latency, cost estimate, failure categories, and release
-gate reasons.
+chunks, answer citations, expected-answer fact coverage, latency, cost estimate,
+failure categories, and release gate reasons.
 
 ## Engineering Decisions
 

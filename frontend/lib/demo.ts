@@ -18,6 +18,42 @@ const sampleChunk = {
   token_count: 42
 };
 
+const securityChunk = {
+  id: "acme-ai-governance-policy:chunk-0001",
+  document_id: "acme-ai-governance-policy",
+  document_title: "Acme Analytics AI Governance Policy",
+  section: "Security Controls",
+  text:
+    "All customer documents must be encrypted in transit and at rest. Access to indexed documents is limited to approved workspace members. Production systems must log document ingestion events, query events, and administrative changes. Secrets must be stored in managed secret storage and must not be committed to source control.",
+  start_char: 55,
+  end_char: 425,
+  token_count: 47
+};
+
+const incidentChunk = {
+  id: "acme-ai-governance-policy:chunk-0002",
+  document_id: "acme-ai-governance-policy",
+  document_title: "Acme Analytics AI Governance Policy",
+  section: "Incident Response",
+  text:
+    "The incident response process starts with triage, severity assignment, and owner selection. Severity one incidents require notification to the security lead within fifteen minutes. The response team must preserve logs, document customer impact, apply containment, and complete a written post-incident review within five business days.",
+  start_char: 427,
+  end_char: 781,
+  token_count: 47
+};
+
+const vendorChunk = {
+  id: "acme-ai-governance-policy:chunk-0003",
+  document_id: "acme-ai-governance-policy",
+  document_title: "Acme Analytics AI Governance Policy",
+  section: "Vendor Review",
+  text:
+    "New AI vendors must complete security, privacy, and reliability review before handling internal or customer data. The review must document data retention, model training usage, regional processing, audit logging, subprocessors, and service-level commitments.",
+  start_char: 783,
+  end_char: 1040,
+  token_count: 34
+};
+
 const dataHandlingChunk = {
   id: "acme-ai-governance-policy:chunk-0003",
   document_id: "acme-ai-governance-policy",
@@ -49,7 +85,7 @@ export function demoIndex(): IndexResponse {
   return {
     document_count: 1,
     chunk_count: 5,
-    chunks: [sampleChunk, dataHandlingChunk]
+    chunks: [securityChunk, incidentChunk, vendorChunk, dataHandlingChunk, sampleChunk]
   };
 }
 
@@ -69,24 +105,60 @@ export function demoUpload(): IndexResponse {
 }
 
 export function demoQuery(question: string): QueryResponse {
+  const loweredQuestion = question.toLowerCase();
+  const selected =
+    loweredQuestion.includes("secret") || loweredQuestion.includes("source control")
+      ? {
+          chunk: securityChunk,
+          answer:
+            "Secrets must be stored in managed secret storage and must not be committed to source control. [C1]",
+          quote:
+            "Secrets must be stored in managed secret storage and must not be committed to source control.",
+          score: 0.42
+        }
+      : loweredQuestion.includes("severity") || loweredQuestion.includes("incident")
+        ? {
+            chunk: incidentChunk,
+            answer:
+              "Severity one incidents require notification to the security lead within fifteen minutes. [C1]",
+            quote:
+              "Severity one incidents require notification to the security lead within fifteen minutes.",
+            score: 0.38
+          }
+        : loweredQuestion.includes("vendor") || loweredQuestion.includes("review")
+          ? {
+              chunk: vendorChunk,
+              answer:
+                "The review must document data retention, model training usage, regional processing, audit logging, subprocessors, and service-level commitments. [C1]",
+              quote:
+                "The review must document data retention, model training usage, regional processing, audit logging, subprocessors, and service-level commitments.",
+              score: 0.35
+            }
+          : {
+              chunk: sampleChunk,
+              answer:
+                "Evaluation reports should include answer quality, retrieval quality, citation coverage, latency, cost estimates, known failure modes, and rollback criteria. [C1]",
+              quote:
+                "Evaluation reports should include answer quality, retrieval quality, citation coverage, latency, cost estimates, known failure modes, and rollback criteria.",
+              score: 0.28
+            };
+
   return {
     question,
-    answer:
-      "Evaluation reports should include answer quality, retrieval quality, citation coverage, latency, cost estimates, known failure modes, and rollback criteria. [C1]",
+    answer: selected.answer,
     citations: [
       {
         id: "C1",
-        chunk_id: sampleChunk.id,
-        document_title: sampleChunk.document_title,
-        section: sampleChunk.section,
-        quote:
-          "Evaluation reports should include answer quality, retrieval quality, citation coverage, latency, cost estimates, known failure modes, and rollback criteria."
+        chunk_id: selected.chunk.id,
+        document_title: selected.chunk.document_title,
+        section: selected.chunk.section,
+        quote: selected.quote
       }
     ],
     retrieved_chunks: [
       {
-        chunk: sampleChunk,
-        score: 0.28
+        chunk: selected.chunk,
+        score: selected.score
       },
       {
         chunk: dataHandlingChunk,
@@ -104,6 +176,16 @@ export function demoQuery(question: string): QueryResponse {
   };
 }
 
+function demoEvaluationAnswer(index: number, question: string): string {
+  const answers = [
+    "Secrets must be stored in managed secret storage and must not be committed to source control. [C1]",
+    "Severity one incidents require notification to the security lead within fifteen minutes. [C1]",
+    "The review must document data retention, model training usage, regional processing, audit logging, subprocessors, and service-level commitments. [C1]",
+    demoQuery(question).answer
+  ];
+  return answers[index] ?? demoQuery(question).answer;
+}
+
 export function demoEvaluation(): EvaluationSummary {
   const questions = [
     "What should the team do with secrets?",
@@ -115,6 +197,7 @@ export function demoEvaluation(): EvaluationSummary {
     run_id: "eval-demo",
     example_count: questions.length,
     retrieval_hit_rate: 1,
+    average_answer_fact_coverage: 1,
     average_citation_coverage: 1,
     average_latency_ms: 1,
     estimated_total_cost_usd: 0.000032,
@@ -148,6 +231,14 @@ export function demoEvaluation(): EvaluationSummary {
           message: "Answers should cite the chunks they use."
         },
         {
+          name: "answer_fact_coverage",
+          observed: 1,
+          threshold: ">= 0.6",
+          passed: true,
+          severity: "blocker",
+          message: "Answers should include the expected curated answer facts."
+        },
+        {
           name: "failure_count",
           observed: 0,
           threshold: "<= 0",
@@ -169,11 +260,9 @@ export function demoEvaluation(): EvaluationSummary {
       id: `demo-${index + 1}`,
       question,
       expected_answer: "Grounded policy answer with cited evidence.",
-      actual_answer:
-        index === 0
-          ? "Secrets must be stored in managed secret storage and must not be committed to source control. [C1]"
-          : demoQuery(question).answer,
+      actual_answer: demoEvaluationAnswer(index, question),
       retrieval_hit: true,
+      answer_fact_coverage: 1,
       citation_coverage: 1,
       latency_ms: 1,
       estimated_cost_usd: 0.000008,

@@ -57,6 +57,7 @@ export type EvaluationItem = {
   expected_answer: string;
   actual_answer: string;
   retrieval_hit: boolean;
+  answer_fact_coverage: number;
   citation_coverage: number;
   latency_ms: number;
   estimated_cost_usd: number;
@@ -68,6 +69,7 @@ export type EvaluationSummary = {
   run_id: string;
   example_count: number;
   retrieval_hit_rate: number;
+  average_answer_fact_coverage: number;
   average_citation_coverage: number;
   average_latency_ms: number;
   estimated_total_cost_usd: number;

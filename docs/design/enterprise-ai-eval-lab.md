@@ -17,8 +17,8 @@ result.
 Applied AI Eval Lab is a web application for evaluating document Q&A systems.
 Users can upload or select documents, ask questions, inspect answers with
 citations, view retrieved chunks, and compare model/retrieval configurations.
-The app includes evaluation reports that measure retrieval quality, answer
-quality, citation coverage, latency, and estimated cost.
+The app includes evaluation reports that measure retrieval quality,
+expected-answer fact coverage, citation coverage, latency, and estimated cost.
 
 ## Target Audience
 
@@ -56,8 +56,8 @@ Primary views:
 
 3. Evaluation Dashboard
    - Run a small curated evaluation set.
-   - Show answer quality, retrieval hit rate, citation coverage, hallucination
-     flags, latency, and estimated cost.
+   - Show expected-answer fact coverage, retrieval hit rate, citation coverage,
+     hallucination flags, latency, and estimated cost.
    - Surface failed examples with expected answer, model answer, retrieved
      context, and failure reason.
 
@@ -80,8 +80,8 @@ The initial release includes:
   and evaluation.
 - Local sample documents committed under a safe sample-data directory.
 - PDF/text parsing for sample documents and uploaded text/PDF files.
-- Chunking and embeddings.
-- A local vector store for development.
+- Chunking and local token-frequency vectors.
+- A local in-memory vector store for development.
 - RAG question answering with citations.
 - Basic evaluation with 5 to 10 curated questions.
 - Unit tests for chunking, citation mapping, and evaluation scoring.
@@ -122,8 +122,8 @@ flowchart LR
     Web --> API["FastAPI Backend"]
     API --> Parser["Document Parser"]
     Parser --> Chunker["Chunker"]
-    Chunker --> Embedder["Embedding Service"]
-    Embedder --> VectorStore["Vector Store"]
+    Chunker --> Vectorizer["Token-Frequency Vectorizer"]
+    Vectorizer --> VectorStore["Vector Store"]
     API --> Retriever["Retriever"]
     Retriever --> VectorStore
     Retriever --> Generator["Answer Generator"]
@@ -137,8 +137,8 @@ flowchart LR
 - `app/api`: FastAPI routers for health, documents, query, and evaluation.
 - `app/core`: configuration, logging, and provider interfaces.
 - `app/documents`: parsing, cleaning, chunking, metadata, and citation mapping.
-- `app/retrieval`: vector store adapter, embedding adapter, retriever, reranker
-  interface.
+- `app/retrieval`: token vectorizer, vector store adapter, retriever, and
+  reranker interface.
 - `app/generation`: prompt construction, answer generation, and citation
   grounding.
 - `app/evaluation`: eval dataset loading, scoring, failure classification, and
@@ -163,13 +163,13 @@ Document ingestion:
 1. User uploads a document or selects a sample document.
 2. Backend parses text and extracts metadata.
 3. Text is cleaned and split into chunks.
-4. Chunks are embedded and stored in the vector store.
+4. Chunks are vectorized and stored in the vector store.
 5. Chunk IDs preserve source document, section, and page metadata.
 
 Question answering:
 
 1. User asks a question.
-2. Backend embeds the query.
+2. Backend vectorizes the query.
 3. Retriever finds top matching chunks.
 4. Generator receives the question, retrieved context, and citation rules.
 5. Backend returns answer, citations, retrieved chunks, latency, and usage.
@@ -178,8 +178,8 @@ Evaluation:
 
 1. Evaluation engine loads curated question/answer examples.
 2. Each example runs through the same query endpoint.
-3. Scorers compute retrieval hit, citation coverage, answer similarity, refusal
-   correctness when applicable, latency, and cost estimate.
+3. Scorers compute retrieval hit, expected-answer fact coverage, citation
+   coverage, refusal correctness when applicable, latency, and cost estimate.
 4. Failed examples are labeled with a failure category.
 5. Results are stored as reports for the app and repo writeups.
 
@@ -187,7 +187,7 @@ Evaluation:
 
 - Document parsing and preprocessing.
 - Chunking strategy and information retrieval.
-- Embedding-based semantic search.
+- Local token-frequency vector retrieval.
 - Retrieval augmented generation.
 - Prompt design for grounded answers.
 - Citation mapping and evidence inspection.
@@ -199,8 +199,8 @@ Evaluation:
 ## Model and Provider Strategy
 
 The system is provider-agnostic. A local deterministic path keeps the project
-usable without API keys, and provider interfaces leave room for later LLM and
-embedding comparisons.
+usable without API keys, and provider interfaces leave room for later LLM,
+reranking, and embedding comparisons.
 
 Local development keeps generation deterministic so tests do not require network
 calls or paid API usage.
@@ -225,9 +225,10 @@ Required tests:
 - Query endpoint returns answer, citations, retrieved chunks, and run metadata.
 - Empty index and invalid document cases return structured errors.
 
-The local verification path covers backend tests, frontend type-checking, builds,
-static export, and Docker Compose validation. Hosted CI can be added later if it
-is useful, but the project stays verifiable from a clean local setup.
+The local verification path covers backend tests, frontend audit, frontend
+type-checking, builds, static export, and Docker Compose validation. Hosted CI
+can be added later if it is useful, but the project stays verifiable from a clean
+local setup.
 
 ## Repository State
 
