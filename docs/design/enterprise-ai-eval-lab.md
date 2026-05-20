@@ -1,10 +1,10 @@
-# Enterprise AI Eval Lab Design
+# Applied AI Eval Lab Design
 
 ## Purpose
 
-Build a live enterprise-style AI/ML portfolio project that demonstrates practical
+Build a live applied AI/ML portfolio project that demonstrates practical
 depth in document intelligence, retrieval augmented generation, AI evaluation,
-experiment design, backend/frontend engineering, and production-minded tradeoffs.
+experiment design, backend/frontend engineering, and reliability tradeoffs.
 
 The project should prove more than "I built a chatbot." It should show that the
 system can ingest documents, retrieve evidence, generate grounded answers,
@@ -32,7 +32,7 @@ quality, citation coverage, latency, and estimated cost.
 - Live product first: every major capability should be visible in the web app.
 - Evaluation is a first-class feature, not an afterthought.
 - Reproducibility matters: setup, test, and evaluation commands must be clear.
-- Keep the first version useful and small, then add enterprise layers.
+- Keep the first release useful and small, then add governance and reliability layers.
 - Use transparent experiment notes and failure analysis to show engineering
   judgment.
 
@@ -66,13 +66,13 @@ Primary views:
      and model/provider configuration.
    - Save experiment results as versioned reports.
 
-5. Production Notes
+5. Reliability Notes
    - Show architecture, model/data cards, limitations, and runbook-style notes.
    - Keep this concise and reviewable from the repo and app.
 
 ## MVP Scope
 
-Version 0 must include:
+The initial release must include:
 
 - A Next.js frontend with the main application shell.
 - A FastAPI backend with endpoints for document ingestion, indexing, querying,
@@ -88,9 +88,9 @@ Version 0 must include:
 - Docker setup for local run.
 - README with setup, demo flow, test commands, and architecture summary.
 
-## Enterprise Expansion Scope
+## Future Expansion Scope
 
-After v0, add:
+Next milestones:
 
 - Reranking support.
 - Multi-experiment comparison.
@@ -99,8 +99,8 @@ After v0, add:
 - Model card and data card.
 - Failure taxonomy for evaluation examples.
 - Exportable evaluation reports.
-- Deployed frontend and backend.
-- GitHub issues and PR history for each milestone.
+- Deployed backend after credentials and deployment setup are ready.
+- GitHub issues and PRs for changes that are large enough to need review history.
 
 ## Non-Goals
 
@@ -267,6 +267,6 @@ The first public release is successful when:
 - No unresolved placeholders remain.
 - Scope is focused on one flagship application with staged milestones.
 - MVP can be implemented without private data or paid-only infrastructure.
-- Enterprise features are staged after the usable v0, so the project can ship
-  incrementally.
+- Larger governance features are staged after the usable release, so the project can
+  improve incrementally.
 - The design avoids deceptive claims and relies on real process evidence.

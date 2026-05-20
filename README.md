@@ -125,7 +125,7 @@ only. Real keys and private documents should never be committed.
 
 ## Project Docs
 
-- [Enterprise AI Eval Lab design spec](docs/design/enterprise-ai-eval-lab.md)
+- [Applied AI Eval Lab design spec](docs/design/enterprise-ai-eval-lab.md)
 - [Model card](docs/model-card.md)
 - [Data card](docs/data-card.md)
 - [Case study](docs/case-study.md)
